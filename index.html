@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Calculator</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                background-color: #333;
+                color: #fff;
+            }
+            .calculator {
+                max-width: 360px;
+                padding: 20px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #444;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            }
+            input[type="text"] {
+                width: 100%;
+                margin-bottom: 10px;
+                padding: 10px;
+                box-sizing: border-box;
+                font-size: 18px;
+                text-align: right;
+            }
+            .button-row {
+                display: flex;
+                justify-content: space-between;
+            }
+            .button-column {
+                display: flex;
+                flex-direction: column;
+                margin-right: 10px;
+            }
+            input[type="button"] {
+                width: 60px;
+                margin-bottom: 10px;
+                padding: 15px;
+                box-sizing: border-box;
+                cursor: pointer;
+                border: none;
+                border-radius: 5px;
+                background-color: #007bff;
+                color: #fff;
+                font-size: 16px;
+                transition: background-color 0.3s ease;
+            }
+            input[type="button"]:hover {
+                background-color: #0056b3;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="calculator">
+            <input type="text" id="display" disabled>
+            <div class="button-row">
+                <div class="button-column">
+                    <input type="button" value="7" onclick="appendValue('7')">
+                    <input type="button" value="4" onclick="appendValue('4')">
+                    <input type="button" value="1" onclick="appendValue('1')">
+                    <input type="button" value="0" onclick="appendValue('0')">
+                </div>
+                <div class="button-column">
+                    <input type="button" value="8" onclick="appendValue('8')">
+                    <input type="button" value="5" onclick="appendValue('5')">
+                    <input type="button" value="2" onclick="appendValue('2')">
+                    <input type="button" value="." onclick="appendValue('.')">
+                </div>
+                <div class="button-column">
+                    <input type="button" value="9" onclick="appendValue('9')">
+                    <input type="button" value="6" onclick="appendValue('6')">
+                    <input type="button" value="3" onclick="appendValue('3')">
+                    <input type="button" value="=" onclick="calculate()">
+                </div>
+                <div class="button-column">
+                    <input type="button" value="/" onclick="appendValue('/')">
+                    <input type="button" value="*" onclick="appendValue('*')">
+                    <input type="button" value="-" onclick="appendValue('-')">
+                    <input type="button" value="+" onclick="appendValue('+')">
+                </div>
+                <div class="button-column">
+                    <input type="button" value="√" onclick="calculateSqrt()">
+                    <input type="button" value="x^y" onclick="appendValue('**')">
+                    <input type="button" value="!" onclick="calculateFactorial()">
+                    <input type="button" value="CE" onclick="clearLastValue()">
+                </div>
+            </div>
+        </div>
+        <script>
+            document.addEventListener('keydown', function(event) {
+                const key = event.key;
+                if (/[\d+\-*\/]/.test(key)) {
+                    event.preventDefault();
+                    appendValue(key);
+                } else if (key === 'Enter') {
+                    event.preventDefault();
+                    calculate();
+                } else if (key === '=' || key === 'Enter') {
+                    event.preventDefault();
+                    calculate();
+                } else if (key === 'Backspace') {
+                    event.preventDefault();
+                    clearLastValue();
+                } else if (key === '.') {
+                    event.preventDefault();
+                    appendValue('.');
+                } else if (key === '^') {
+                    event.preventDefault();
+                    appendValue('**');
+                }
+            });
+
+            function appendValue(value) {
+                document.getElementById('display').value += value;
+            }
+
+            function clearLastValue() {
+                let currentValue = document.getElementById('display').value;
+                document.getElementById('display').value = currentValue.slice(0, -1);
+            }
+
+            function clearDisplay() {
+                document.getElementById('display').value = '';
+            }
+
+            function calculate() {
+                let result;
+                try {
+                    result = eval(document.getElementById('display').value);
+                    document.getElementById('display').value = result;
+                } catch (error) {
+                    document.getElementById('display').value = 'Hata';
+                }
+            }
+
+            function calculateSqrt() {
+                let currentValue = document.getElementById('display').value;
+                let result = Math.sqrt(parseFloat(currentValue));
+                document.getElementById('display').value = result;
+            }
+
+            function calculateFactorial() {
+                let currentValue = document.getElementById('display').value;
+                let num = parseInt(currentValue);
+                if (num < 0) {
+                    document.getElementById('display').value = 'Hata';
+                } else if (num === 0) {
+                    document.getElementById('display').value = '1';
+                } else {
+                    let result = 1;
+                    for (let i = 1; i <= num; i++) {
+                        result *= i;
+                    }
+                    document.getElementById('display').value = result;
+                }
+            }
+        </script>
+    </body>
+</html>
